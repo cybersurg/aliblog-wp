@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand:#0d47a1;
+  --accent:#22c55e;
+}
+.btn { @apply px-4 py-2 rounded-xl; }
