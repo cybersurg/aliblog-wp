@@ -1,0 +1,39 @@
+name: Deploy to Hostinger
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'theme/ali-child/**'
+      - 'mu-plugins/**'
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build assets
+        working-directory: theme/ali-child
+        run: |
+          npm ci
+          npm run build
+
+      - name: Upload Theme
+        uses: wlixcc/SFTP-Deploy-Action@v1.2
+        with:
+          username: ${{ secrets.SFTP_USER }}
+          server: ${{ secrets.SFTP_HOST }}
+          port: ${{ secrets.SFTP_PORT }}
+          password: ${{ secrets.SFTP_PASS }}
+          local_path: "theme/ali-child/*"
+          remote_path: "/home/YOUR_HOSTINGER_USER/public_html/wp-content/themes/ali-child"
+          exclude: ".git*,node_modules,src,tailwind.config.js,package*.json"
+
+      - name: Upload MU Plugins
+        uses: wlixcc/SFTP-Deploy-Action@v1.2
+        with:
+          username: ${{ secrets.SFTP_USER }}
+          server: ${{ secrets.SFTP_HOST }}
+          port: ${{ secrets.SFTP_PORT }}
+          password: ${{ secrets.SFTP_PASS }}
+          local_path: "mu-plugins/*"
+          remote_path: "/home/YOUR_HOSTINGER_USER/public_html/wp-content/mu-plugins"
